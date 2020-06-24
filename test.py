@@ -1,3 +1,4 @@
+
 #from ibw.client import IBClient
 
 #REGULAR_ACCOUNT = 'DU1937358'
@@ -27,11 +28,12 @@ ib_client = IBClient()
 ret = ib_client.is_authenticated()
 ib_client.get_account()
 ib_client.server_accounts()
-print(ret)
+#print(ret)
 quote_fields = [55, 7296, 7295, 86, 70, 71, 84, 31]
 aapl_current_prices = ib_client.get_market(conids = ['265598'], since = '0', fields = quote_fields)
-print(aapl_current_prices)
-ib_client.portfolio_accounts()
+#print(aapl_current_prices)
+#ret2 = ib_client.get_scanners()
+
 
 from datetime import date
 import tornado.escape
@@ -67,13 +69,103 @@ class GetPortfolio(tornado.web.RequestHandler):
         ib_client = IBClient()
         ret = ib_client.portfolio_accounts()
 
-        self.write(ret[0])        
+        self.write(ret[0])
+class GetScanner(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.get_scanners()
 
+        self.write(ret)
+class GetLiveOrders(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.get_live_orders()
+
+        self.write(ret)        
+class GetTrades(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.trades()
+
+        self.write(ret[0])
+class GetFundamentalSummary(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.fundamentals_summary(conid = '265598')
+
+        self.write(ret)
+class GetFundamentalDividends(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.fundamentals_dividends(conid = '265598')
+
+        self.write(ret)
+class GetDataNews(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.data_news(conid = '265598')
+
+        self.write(ret)        
+class GetDataRatings(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.data_ratings(conid = '265598')
+
+        self.write(ret)
+class GetContractDetails(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.contract_details(conid = '265598')
+
+        self.write(ret)
+class PlaceOrder(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.place_order(account_id = '265598',order = '265598')
+
+        self.write(ret)        
+class PlaceOrders(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.place_orders(account_id = '265598',orders = ['265598'])
+
+        self.write(ret)
+class ModifyOrder(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.modify_order(account_id = '265598',customer_order_id = ['265598'],order = ['265598'])
+
+        self.write(ret)
+class DeleteOrder(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.delete_order(account_id = '265598',customer_order_id = ['265598'])
+
+        self.write(ret)
+class GetCustomerInfo(tornado.web.RequestHandler):
+    def get(self):
+        ib_client = IBClient()
+        ret = ib_client.customer_info()
+
+        self.write(ret)        
 application = tornado.web.Application([
     (r"/getAuth", GetAuth),
     (r"/getAccount", GetAccount),
     (r"/getMarket", GetMarket),
     (r"/getPortfolio", GetPortfolio),
+    (r"/getLiveOrders", GetLiveOrders),
+    (r"/getFundamentalSummary", GetFundamentalSummary),
+    (r"/getDataNews", GetDataNews),
+    (r"/getContractDetails", GetContractDetails),
+    (r"/getDataRatings", GetDataRatings),
+    (r"/getFundamentalDividends", GetFundamentalDividends),
+    (r"/getScanner", GetScanner),
+    (r"/getTrades", GetTrades),
+    (r"/PlaceOrder", PlaceOrder),
+    (r"/ModifyOrder", ModifyOrder),
+    (r"/getCustomerInfo", GetCustomerInfo),
+    (r"/DeleteOrder", DeleteOrder),
+    (r"/PlaceOrders", PlaceOrders),
     (r"/version", VersionHandler)
 ])
 
